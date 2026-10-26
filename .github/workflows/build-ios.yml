@@ -20,17 +20,24 @@ jobs:
 
       - name: Configurar Versão do Xcode
         run: |
+          echo "Versões disponíveis do Xcode no runner:"
+          ls -d /Applications/Xcode*
           if [ -d "/Applications/Xcode_16.0.app" ]; then
             sudo xcode-select -s /Applications/Xcode_16.0.app
+          elif [ -d "/Applications/Xcode_16.app" ]; then
+            sudo xcode-select -s /Applications/Xcode_16.app
           elif [ -d "/Applications/Xcode_15.4.app" ]; then
             sudo xcode-select -s /Applications/Xcode_15.4.app
           fi
           xcodebuild -version
 
-      - name: Gerar Projeto Xcode
+      - name: Gerar Projeto Xcode e Ajustar Compatibilidade
         run: |
           cd CombatFitNative
           xcodegen generate
+          # Garante compatibilidade universal do formato PBX
+          sed -i '' 's/objectVersion = [0-9]*/objectVersion = 56/g' CombatFit.xcodeproj/project.pbxproj
+          head -n 10 CombatFit.xcodeproj/project.pbxproj
 
       - name: Compilar App iOS e Watch App
         run: |
@@ -39,17 +46,18 @@ jobs:
             -scheme CombatFit \
             -configuration Release \
             -destination 'generic/platform=iOS' \
+            -archivePath ../build/CombatFit.xcarchive \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGN_IDENTITY="" \
-            build \
-            CONFIGURATION_BUILD_DIR=../build/Release-iphoneos
+            archive
 
       - name: Empacotar em arquivo IPA
         run: |
           mkdir -p Payload
-          cp -r build/Release-iphoneos/CombatFit.app Payload/
+          cp -r build/CombatFit.xcarchive/Products/Applications/CombatFit.app Payload/
           zip -r CombatFit.ipa Payload
+          ls -lh CombatFit.ipa
 
       - name: Upload do Artefato IPA para Download
         uses: actions/upload-artifact@v4
