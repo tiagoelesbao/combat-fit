@@ -21,12 +21,31 @@ struct WatchCadenceMetronomeView: View {
                 .foregroundColor(.orange)
             
             // Selector 1 rep/s ou 2 reps/s
-            Picker("Modo", selection: $repsPerSecond) {
-                Text("2 r/s").tag(2.0)
-                Text("1 r/s").tag(1.0)
+            HStack(spacing: 6) {
+                Button(action: { repsPerSecond = 2.0 }) {
+                    Text("2 r/s")
+                        .font(.system(size: 11, weight: .bold))
+                        .padding(.vertical, 4)
+                        .frame(maxWidth: .infinity)
+                        .background(repsPerSecond == 2.0 ? Color.orange : Color.white.opacity(0.15))
+                        .foregroundColor(repsPerSecond == 2.0 ? .black : .white)
+                        .cornerRadius(6)
+                }
+                .buttonStyle(.plain)
+                .disabled(isActive)
+                
+                Button(action: { repsPerSecond = 1.0 }) {
+                    Text("1 r/s")
+                        .font(.system(size: 11, weight: .bold))
+                        .padding(.vertical, 4)
+                        .frame(maxWidth: .infinity)
+                        .background(repsPerSecond == 1.0 ? Color.orange : Color.white.opacity(0.15))
+                        .foregroundColor(repsPerSecond == 1.0 ? .black : .white)
+                        .cornerRadius(6)
+                }
+                .buttonStyle(.plain)
+                .disabled(isActive)
             }
-            .pickerStyle(.segmented)
-            .disabled(isActive)
             
             // Display
             ZStack {
