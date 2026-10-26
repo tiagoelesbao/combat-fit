@@ -20,12 +20,11 @@ targets:
     sources:
       - path: CombatFitIOS
       - path: Shared
+    info:
+      path: CombatFitIOS/Info.plist
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.tiagoelesbao.combatfit
-        INFOPLIST_KEY_CFBundleDisplayName: "CombatFit"
-        INFOPLIST_KEY_NSHealthShareUsageDescription: "O CombatFit precisa de acesso aos batimentos cardíacos para monitorar a intensidade dos treinos."
-        INFOPLIST_KEY_NSHealthUpdateUsageDescription: "O CombatFit grava os treinos de força e sprints no Apple Health."
     dependencies:
       - target: CombatFitWatch
 
@@ -36,11 +35,8 @@ targets:
     sources:
       - path: CombatFitWatch
       - path: Shared
+    info:
+      path: CombatFitWatch/Info.plist
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.tiagoelesbao.combatfit.watchkitapp
-        INFOPLIST_KEY_CFBundleDisplayName: "CombatFit"
-        INFOPLIST_KEY_WKCompanionAppBundleIdentifier: com.tiagoelesbao.combatfit
-        INFOPLIST_KEY_NSHealthShareUsageDescription: "Monitoramento de batimentos cardíacos no pulso."
-        INFOPLIST_KEY_NSHealthUpdateUsageDescription: "Gravação de sessões no Apple Health."
-        INFOPLIST_KEY_WKBackgroundModes: ["workout-processing"]
