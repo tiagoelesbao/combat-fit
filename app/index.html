@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#090b10">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="CombatFit">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="icon" type="image/svg+xml" href="icon.svg">
+  <title>Combat Performance - Fase 1</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Safe Area Wrapper -->
+  <div id="app" class="app-container">
+    
+    <!-- Top Bar: Fighter Header -->
+    <header class="fighter-header">
+      <div class="fighter-info">
+        <div class="avatar-badge">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div>
+          <div class="athlete-title">ATLETA COMBATE • FASE 1</div>
+          <div class="athlete-specs">
+            <span id="headerWeightDisplay" class="spec-pill">60.0 kg</span>
+            <span id="headerWeekDisplay" class="spec-pill accent-pill">Semana 1 (60% BW)</span>
+          </div>
+        </div>
+      </div>
+      <button id="btnQuickSettings" class="btn-icon" aria-label="Ajustar Peso ou Semana">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+      </button>
+    </header>
+
+    <!-- Main Content Area with Views -->
+    <main class="main-viewport">
+      
+      <!-- VIEW 1: WORKOUT (TREINO) -->
+      <section id="viewWorkout" class="tab-view active">
+        
+        <!-- Day Selector Pill Strip -->
+        <div class="day-strip-scroll">
+          <div class="day-strip" id="dayStrip">
+            <button class="day-chip active" data-day="seg">
+              <span class="day-abbr">SEG</span>
+              <span class="day-tag">Treino A</span>
+            </button>
+            <button class="day-chip" data-day="ter">
+              <span class="day-abbr">TER</span>
+              <span class="day-tag">30m Sprints</span>
+            </button>
+            <button class="day-chip" data-day="qua">
+              <span class="day-abbr">QUA</span>
+              <span class="day-tag">Treino B</span>
+            </button>
+            <button class="day-chip" data-day="qui">
+              <span class="day-abbr">QUI</span>
+              <span class="day-tag">200m Corrida</span>
+            </button>
+            <button class="day-chip" data-day="sex">
+              <span class="day-abbr">SEX</span>
+              <span class="day-tag">Treino C</span>
+            </button>
+            <button class="day-chip" data-day="sab">
+              <span class="day-abbr">SÁB</span>
+              <span class="day-tag">Ativo</span>
+            </button>
+            <button class="day-chip" data-day="dom">
+              <span class="day-abbr">DOM</span>
+              <span class="day-tag">Off</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Workout Header Card -->
+        <div class="workout-overview-card" id="workoutOverviewCard">
+          <div class="overview-header">
+            <div>
+              <span class="badge-accent" id="workoutFocusBadge">FORÇA & POTÊNCIA ALÁTICA</span>
+              <h2 id="workoutTitle" class="workout-title">Treino A: Base & Força</h2>
+            </div>
+            <div class="tonnage-counter">
+              <div class="tonnage-num" id="liveVolumeCounter">0</div>
+              <div class="tonnage-label">kg levantados</div>
+            </div>
+          </div>
+          <p id="workoutDesc" class="workout-desc">Full body focado em empurrada horizontal e cadeia posterior com Levantamento Terra.</p>
+          
+          <div class="workout-meta-bar">
+            <div class="meta-item">
+              <span class="meta-label">Concluídas</span>
+              <span class="meta-val" id="completedSetsCounter">0 / 0</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Intensidade Base</span>
+              <span class="meta-val" id="workoutIntensity">60% BW (36 kg)</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Tempo Est.</span>
+              <span class="meta-val">~45 min</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dynamic Exercise List -->
+        <div id="exercisesContainer" class="exercises-container">
+          <!-- Populated dynamically via JS -->
+        </div>
+
+        <!-- Running Specific Module (Hidden by default, shown on TER / QUI) -->
+        <div id="runningModule" class="running-module hidden">
+          <!-- Populated dynamically via JS -->
+        </div>
+
+        <!-- Action Finish Bar -->
+        <div class="finish-workout-bar">
+          <button id="btnFinishWorkout" class="btn-primary-finish">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            Finalizar e Salvar Treino
+          </button>
+        </div>
+      </section>
+
+      <!-- VIEW 2: METRÔNOMO & CADÊNCIA -->
+      <section id="viewCadence" class="tab-view">
+        <div class="view-header">
+          <h2>Metrônomo de Potência Explosiva</h2>
+          <p>O curso Hariel Corrêa exige cadência precisa para ativar a creatina fosfato nos tiros de até 15 segundos:</p>
+        </div>
+
+        <div class="cadence-cards-grid">
+          <!-- Card Velocidade -->
+          <div class="cadence-card">
+            <div class="cadence-badge speed-badge">Ênfase em Velocidade</div>
+            <h3>2 Repetições / Segundo</h3>
+            <p>Usado no Supino Rápido (30% BW) e Saltos. Duração estrita de 6 a 8 segundos.</p>
+            <div class="cadence-display">
+              <div class="cadence-pulse" id="pulseSpeed"></div>
+              <div class="cadence-timer-text" id="cadenceTimeSpeed">8.0s</div>
+            </div>
+            <button id="btnStartSpeedMetronome" class="btn-action">Iniciar Tiros de 8s (2 reps/s)</button>
+          </div>
+
+          <!-- Card Força -->
+          <div class="cadence-card">
+            <div class="cadence-badge force-badge">Ênfase em Força</div>
+            <h3>1 Repetição / Segundo</h3>
+            <p>Usado para aceleração controlada em 50-70% BW. Esforço máximo de aceleração constante.</p>
+            <div class="cadence-display">
+              <div class="cadence-pulse" id="pulseForce"></div>
+              <div class="cadence-timer-text" id="cadenceTimeForce">8.0s</div>
+            </div>
+            <button id="btnStartForceMetronome" class="btn-action">Iniciar Tiros de 8s (1 rep/s)</button>
+          </div>
+        </div>
+
+        <!-- Stop cadence button -->
+        <div class="center-actions">
+          <button id="btnStopMetronome" class="btn-secondary hidden">Parar Metrônomo</button>
+        </div>
+      </section>
+
+      <!-- VIEW 3: RELATÓRIOS & VOLUME -->
+      <section id="viewReports" class="tab-view">
+        <div class="view-header">
+          <h2>Relatórios de Performance</h2>
+          <p>Acompanhe o volume individual por série, exercício, dia e semana.</p>
+        </div>
+
+        <!-- Metric KPI Cards -->
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <span class="kpi-label">Volume Total Semana</span>
+            <span class="kpi-value" id="kpiWeeklyVolume">0 kg</span>
+            <span class="kpi-sub">Tonelagem acumulada</span>
+          </div>
+          <div class="kpi-card">
+            <span class="kpi-label">Treinos Concluídos</span>
+            <span class="kpi-value" id="kpiCompletedWorkouts">0</span>
+            <span class="kpi-sub">Sessões registradas</span>
+          </div>
+          <div class="kpi-card">
+            <span class="kpi-label">Séries Executadas</span>
+            <span class="kpi-value" id="kpiTotalSets">0</span>
+            <span class="kpi-sub">Histórico total</span>
+          </div>
+          <div class="kpi-card">
+            <span class="kpi-label">Volume Médio / Treino</span>
+            <span class="kpi-value" id="kpiAvgVolume">0 kg</span>
+            <span class="kpi-sub">Média por sessão</span>
+          </div>
+        </div>
+
+        <!-- Weekly Chart Container -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>Volume Levantado por Sessão (kg)</h3>
+          </div>
+          <div id="chartContainer" class="chart-bars-wrap">
+            <!-- Rendered via SVG/HTML in JS -->
+          </div>
+        </div>
+
+        <!-- History Sessions List -->
+        <div class="history-card">
+          <h3>Histórico de Treinos Salvos</h3>
+          <div id="historyList" class="history-list">
+            <!-- Rendered in JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW 4: CONFIGURAÇÕES -->
+      <section id="viewSettings" class="tab-view">
+        <div class="view-header">
+          <h2>Configuração do Lutador</h2>
+          <p>Personalize o seu peso corporal e semana do ciclo para calibrar as cargas instantaneamente.</p>
+        </div>
+
+        <div class="settings-card">
+          <div class="setting-row">
+            <label for="inputAthleteWeight">Peso Corporal Atual (kg):</label>
+            <div class="input-inline">
+              <input type="number" id="inputAthleteWeight" step="0.5" min="40" max="150" value="60.0">
+              <span class="input-unit">kg</span>
+            </div>
+          </div>
+          <div class="setting-row">
+            <label for="selectCurrentWeek">Semana Ativa do Ciclo:</label>
+            <select id="selectCurrentWeek" class="select-modern">
+              <option value="1">Semana 1 — 60% BW</option>
+              <option value="2">Semana 2 — 65% BW</option>
+              <option value="3">Semana 3 — 70% BW</option>
+              <option value="4">Semana 4 — 75% BW</option>
+              <option value="5">Semana 5 — 80% BW</option>
+              <option value="6">Semana 6 — 85% BW</option>
+              <option value="7">Semana 7 — 90% BW</option>
+              <option value="8">Semana 8 — 95% BW</option>
+              <option value="9">Semana 9 — 100% BW</option>
+            </select>
+          </div>
+          <div class="setting-row">
+            <label for="toggleAudioBeep">Sons e Bips do Cronômetro:</label>
+            <input type="checkbox" id="toggleAudioBeep" checked class="toggle-checkbox">
+          </div>
+          <button id="btnSaveSettings" class="btn-primary-finish mt-12">Salvar & Recalcular Cargas</button>
+        </div>
+
+        <div class="settings-card">
+          <h3>Tabela de Cargas Atuais Calculadas</h3>
+          <div id="settingsLoadsTable" class="loads-preview-table">
+            <!-- Populated via JS -->
+          </div>
+        </div>
+
+        <div class="settings-card">
+          <h3>Backup e Dados</h3>
+          <p class="text-sm">Exporte seus treinos e histórico para não perder seus dados no iPhone.</p>
+          <div class="button-group-row">
+            <button id="btnExportData" class="btn-action">Exportar Backup JSON</button>
+            <button id="btnClearData" class="btn-danger">Limpar Dados</button>
+          </div>
+        </div>
+
+        <div class="settings-card">
+          <h3>Instalação no iPhone</h3>
+          <p class="text-sm">1. Abra este endereço no <strong>Safari do iPhone</strong>.<br>
+          2. Toque no botão de <strong>Compartilhar</strong> (quadrado com seta para cima no meio inferior do Safari).<br>
+          3. Role para baixo e selecione <strong>"Adicionar à Tela de Início"</strong>.<br>
+          4. O ícone do CombatFit aparecerá na tela do seu iPhone abrindo em tela cheia como um aplicativo nativo!</p>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Floating Rest Timer Widget -->
+    <div id="floatingTimerWidget" class="floating-timer hidden">
+      <div class="timer-inner">
+        <div class="timer-info">
+          <span class="timer-label">DESCANSO</span>
+          <span id="floatingTimerSeconds" class="timer-digits">01:30</span>
+        </div>
+        <div class="timer-controls">
+          <button id="btnTimerMinus" class="btn-timer-sub">-30s</button>
+          <button id="btnTimerPlus" class="btn-timer-sub">+30s</button>
+          <button id="btnTimerSkip" class="btn-timer-skip">Pular</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Navigation Bar (iOS Native Style) -->
+    <nav class="bottom-nav">
+      <button class="nav-tab active" data-target="viewWorkout">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M6 4v16M18 4v16M2 8h4M18 8h4M2 16h4M18 16h4M6 12h12" stroke-linecap="round"/>
+        </svg>
+        <span>Treino</span>
+      </button>
+      <button class="nav-tab" data-target="viewCadence">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <polyline points="12 6 12 12 16 14"/>
+        </svg>
+        <span>Cadência</span>
+      </button>
+      <button class="nav-tab" data-target="viewReports">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="20" x2="18" y2="10"/>
+          <line x1="12" y1="20" x2="12" y2="4"/>
+          <line x1="6" y1="20" x2="6" y2="14"/>
+        </svg>
+        <span>Relatórios</span>
+      </button>
+      <button class="nav-tab" data-target="viewSettings">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+        <span>Ajustes</span>
+      </button>
+    </nav>
+
+    <!-- Quick Settings Modal -->
+    <div id="quickModal" class="modal-overlay hidden">
+      <div class="modal-box">
+        <h3>Ajuste Rápido do Ciclo</h3>
+        <div class="modal-field">
+          <label>Peso Corporal (kg):</label>
+          <input type="number" id="quickWeightInput" step="0.5" value="60.0">
+        </div>
+        <div class="modal-field">
+          <label>Semana do Ciclo (1 a 9):</label>
+          <select id="quickWeekSelect">
+            <option value="1">Semana 1 (60% BW)</option>
+            <option value="2">Semana 2 (65% BW)</option>
+            <option value="3">Semana 3 (70% BW)</option>
+            <option value="4">Semana 4 (75% BW)</option>
+            <option value="5">Semana 5 (80% BW)</option>
+            <option value="6">Semana 6 (85% BW)</option>
+            <option value="7">Semana 7 (90% BW)</option>
+            <option value="8">Semana 8 (95% BW)</option>
+            <option value="9">Semana 9 (100% BW)</option>
+          </select>
+        </div>
+        <div class="modal-actions">
+          <button id="btnQuickClose" class="btn-secondary">Cancelar</button>
+          <button id="btnQuickConfirm" class="btn-action">Atualizar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toastNotification" class="toast-box hidden">Treino Salvo com Sucesso!</div>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

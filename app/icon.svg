@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#020617"/>
+    </linearGradient>
+    <linearGradient id="flame" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#ef4444"/>
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#bg)" stroke="#334155" stroke-width="6"/>
+  <!-- Decorative Ring -->
+  <circle cx="256" cy="230" r="140" fill="none" stroke="#1e293b" stroke-width="16"/>
+  <circle cx="256" cy="230" r="140" fill="none" stroke="url(#flame)" stroke-width="12" stroke-dasharray="140 30" stroke-linecap="round" filter="url(#glow)"/>
+  <!-- Lightning / Fist Bolt -->
+  <path d="M276 120 L196 240 L250 240 L236 340 L316 220 L262 220 Z" fill="url(#flame)" filter="url(#glow)"/>
+  <!-- Typography -->
+  <text x="256" y="415" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="38" fill="#ffffff" text-anchor="middle" letter-spacing="4">COMBAT FIT</text>
+  <text x="256" y="450" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="700" font-size="16" fill="#f59e0b" text-anchor="middle" letter-spacing="8">FASE 1 • FULL BODY</text>
+</svg>

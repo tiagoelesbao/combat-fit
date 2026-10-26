@@ -1,0 +1,50 @@
+name: Build iOS and Watch App (IPA)
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Compilar CombatFit (iOS + Apple Watch)
+    runs-on: macos-14
+
+    steps:
+      - name: Checkout do Repositório
+        uses: actions/checkout@v4
+
+      - name: Instalar XcodeGen
+        run: |
+          brew install xcodegen
+
+      - name: Gerar Projeto Xcode
+        run: |
+          cd CombatFitNative
+          xcodegen generate
+
+      - name: Compilar App iOS e Watch App
+        run: |
+          cd CombatFitNative
+          xcodebuild -project CombatFit.xcodeproj \
+            -scheme CombatFit \
+            -configuration Release \
+            -destination 'generic/platform=iOS' \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            build \
+            CONFIGURATION_BUILD_DIR=../build/Release-iphoneos
+
+      - name: Empacotar em arquivo IPA
+        run: |
+          mkdir -p Payload
+          cp -r build/Release-iphoneos/CombatFit.app Payload/
+          zip -r CombatFit.ipa Payload
+
+      - name: Upload do Artefato IPA para Download
+        uses: actions/upload-artifact@v4
+        with:
+          name: CombatFit-iOS-Watch-IPA
+          path: CombatFit.ipa
+          retention-days: 14
