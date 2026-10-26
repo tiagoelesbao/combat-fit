@@ -149,7 +149,13 @@ struct DashboardView: View {
                                 if day.type == .gym {
                                     ForEach(day.exercises.indices, id: \.self) { exIndex in
                                         ExerciseCard(
-                                            exercise: $weekWorkouts[activeDayKey]!.exercises[exIndex]
+                                            exercise: day.exercises[exIndex],
+                                            onToggleSet: { setIdx in
+                                                if var d = weekWorkouts[activeDayKey] {
+                                                    d.exercises[exIndex].sets[setIdx].isCompleted.toggle()
+                                                    weekWorkouts[activeDayKey] = d
+                                                }
+                                            }
                                         )
                                     }
                                 } else if day.type == .sprints || day.type == .intervals {
@@ -163,7 +169,10 @@ struct DashboardView: View {
                                                     .foregroundColor(.white)
                                                 Spacer()
                                                 Button(action: {
-                                                    weekWorkouts[activeDayKey]!.runningShots[shotIndex].isCompleted.toggle()
+                                                    if var d = weekWorkouts[activeDayKey] {
+                                                        d.runningShots[shotIndex].isCompleted.toggle()
+                                                        weekWorkouts[activeDayKey] = d
+                                                    }
                                                 }) {
                                                     Image(systemName: shot.isCompleted ? "checkmark.circle.fill" : "circle")
                                                         .font(.system(size: 24))
@@ -230,7 +239,8 @@ struct DayPillButton: View {
 }
 
 struct ExerciseCard: View {
-    @Binding var exercise: Exercise
+    let exercise: Exercise
+    let onToggleSet: (Int) -> Void
     
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -286,7 +296,7 @@ struct ExerciseCard: View {
                             .foregroundColor(.gray)
                         
                         Button(action: {
-                            exercise.sets[setIdx].isCompleted.toggle()
+                            onToggleSet(setIdx)
                         }) {
                             Image(systemName: set.isCompleted ? "checkmark.circle.fill" : "circle")
                                 .font(.system(size: 22))
