@@ -218,6 +218,26 @@
           </div>
         </div>
 
+        <!-- Personal Records Section -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>🏆 Recordes Pessoais (PR por Exercício)</h3>
+          </div>
+          <div id="prSection">
+            <!-- Rendered in JS -->
+          </div>
+        </div>
+
+        <!-- Exercise Volume Breakdown -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>📊 Volume por Exercício (Acumulado)</h3>
+          </div>
+          <div id="exerciseBreakdownList">
+            <!-- Rendered in JS -->
+          </div>
+        </div>
+
         <!-- History Sessions List -->
         <div class="history-card">
           <h3>Histórico de Treinos Salvos</h3>
@@ -272,11 +292,15 @@
 
         <div class="settings-card">
           <h3>Backup e Dados</h3>
-          <p class="text-sm">Exporte seus treinos e histórico para não perder seus dados no iPhone.</p>
+          <p class="text-sm">Exporte seus treinos e histórico para não perder seus dados. Importe para mesclar treinos de outro dispositivo.</p>
           <div class="button-group-row">
             <button id="btnExportData" class="btn-action">Exportar Backup JSON</button>
-            <button id="btnClearData" class="btn-danger">Limpar Dados</button>
+            <button id="btnImportData" class="btn-action">Importar Backup</button>
           </div>
+          <div class="button-group-row" style="margin-top: 8px;">
+            <button id="btnClearData" class="btn-danger" style="flex:1;">Limpar Dados e PRs</button>
+          </div>
+          <input type="file" id="fileImportInput" accept=".json" class="hidden">
         </div>
 
         <div class="settings-card">

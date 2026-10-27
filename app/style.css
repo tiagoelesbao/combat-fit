@@ -1072,6 +1072,173 @@ body {
   to { opacity: 1; transform: translate(-50%, 0); }
 }
 
+/* --- Personal Records --- */
+.pr-item {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.pr-item:last-child { border-bottom: none; }
+
+.pr-exercise {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.pr-details {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.pr-badge {
+  background: rgba(245, 158, 11, 0.15);
+  color: var(--accent-gold);
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+.pr-vol {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent-green);
+}
+
+.pr-date {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-left: auto;
+}
+
+/* --- Exercise Volume Breakdown --- */
+.ex-breakdown-item {
+  margin-bottom: 12px;
+}
+.ex-breakdown-item:last-child { margin-bottom: 0; }
+
+.ex-breakdown-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 5px;
+}
+
+.ex-breakdown-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.ex-breakdown-vol {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--accent-gold);
+}
+
+.ex-breakdown-bar-bg {
+  height: 6px;
+  background: var(--bg-surface-elevated);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.ex-breakdown-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-gold), var(--accent-red));
+  border-radius: 6px;
+  transition: width 0.5s ease;
+}
+
+.ex-breakdown-sessions {
+  font-size: 10px;
+  color: var(--text-muted);
+  display: block;
+  margin-top: 3px;
+}
+
+/* --- History Item (expandable) --- */
+.history-item {
+  background: var(--bg-surface-elevated);
+  border-radius: 12px;
+  padding: 12px;
+  border: 1px solid var(--border-subtle);
+  transition: border-color 0.2s;
+}
+
+.history-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.btn-expand-session {
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  color: var(--accent-gold);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+.btn-expand-session:active { opacity: 0.7; }
+
+/* --- Session Detail Expand --- */
+.session-detail {
+  margin-top: 10px;
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 10px;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.session-ex-block {
+  margin-bottom: 10px;
+}
+.session-ex-block:last-child { margin-bottom: 0; }
+
+.session-ex-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.session-ex-vol-total {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent-green);
+}
+
+.session-set-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  color: var(--text-muted);
+  padding: 3px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+.session-set-row:last-child { border-bottom: none; }
+
+.session-set-vol {
+  font-weight: 700;
+  color: var(--accent-gold);
+}
+
+/* History list — sem limite de altura para mostrar detalhes */
+.history-list {
+  max-height: none;
+}
+
 .hidden {
   display: none !important;
 }

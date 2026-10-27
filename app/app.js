@@ -11,7 +11,35 @@ const DEFAULT_STATE = {
   athleteWeight: 60.0,
   currentWeek: 1, // 1 a 9
   soundEnabled: true,
-  history: [] // array de { id, date, dayKey, workoutTitle, totalVolume, totalSets, exercises: [...] }
+  history: [],  // array de sessões completas (ver estrutura abaixo)
+  prs: {}       // { exerciseId: { weight, reps, volume, date } } — Personal Records
+  /**
+   * Estrutura de cada sessão em history:
+   * {
+   *   id: <timestamp>,
+   *   date: <ISO string>,
+   *   dayKey: 'seg'|'ter'|...,
+   *   workoutTitle: string,
+   *   totalVolume: number,   // kg totais levantados
+   *   totalSets: number,
+   *   week: number,
+   *   athleteWeight: number, // peso do atleta na época
+   *   exercises: [           // apenas para tipo gym
+   *     {
+   *       id: string,
+   *       name: string,
+   *       sets: [
+   *         { setNumber, weight, reps, volume, done }
+   *       ],
+   *       totalVolume: number,
+   *       completedSets: number
+   *     }
+   *   ],
+   *   runningShots: [        // apenas para tipo running
+   *     { roundNumber, timeSec, done }
+   *   ]
+   * }
+   */
 };
 
 let appState = { ...DEFAULT_STATE };
@@ -658,6 +686,50 @@ function stopCadence() {
 // 7. REPORTS & VOLUME ANALYTICS
 // ==========================================
 
+/** Atualiza o objeto de Personal Records baseado em uma sessão salva */
+function updatePRs(session) {
+  if (!session.exercises || !Array.isArray(session.exercises)) return;
+  if (!appState.prs) appState.prs = {};
+
+  session.exercises.forEach(ex => {
+    if (!ex.sets || !Array.isArray(ex.sets)) return;
+    ex.sets.forEach(s => {
+      if (!s.done || !s.weight || !s.reps) return;
+      const vol = s.weight * s.reps;
+      const current = appState.prs[ex.id];
+      // PR de Volume por série (peso × reps)
+      if (!current || vol > current.volume) {
+        appState.prs[ex.id] = {
+          exerciseName: ex.name,
+          weight: s.weight,
+          reps: s.reps,
+          volume: vol,
+          date: session.date
+        };
+      }
+    });
+  });
+}
+
+/** Calcula volume acumulado por exercício nos últimos N treinos */
+function getExerciseVolumeBreakdown(history) {
+  const breakdown = {};
+  history.forEach(session => {
+    if (!session.exercises) return;
+    session.exercises.forEach(ex => {
+      if (!breakdown[ex.id]) {
+        breakdown[ex.id] = { name: ex.name, totalVolume: 0, sessions: 0, lastDate: session.date };
+      }
+      breakdown[ex.id].totalVolume += (ex.totalVolume || 0);
+      breakdown[ex.id].sessions++;
+      if (new Date(session.date) > new Date(breakdown[ex.id].lastDate)) {
+        breakdown[ex.id].lastDate = session.date;
+      }
+    });
+  });
+  return breakdown;
+}
+
 function renderReports() {
   const history = appState.history || [];
   
@@ -685,22 +757,129 @@ function renderReports() {
   // Render Chart
   renderVolumeChart(history);
 
+  // Render PRs
+  renderPRSection();
+
+  // Render Exercise Breakdown
+  renderExerciseBreakdown(history);
+
   // Render History List
+  renderHistoryList(history);
+}
+
+function renderPRSection() {
+  const prEl = document.getElementById("prSection");
+  if (!prEl) return;
+  const prs = appState.prs || {};
+  const keys = Object.keys(prs);
+
+  if (keys.length === 0) {
+    prEl.innerHTML = `<p class="text-sm" style="text-align:center; padding:8px; color:var(--text-muted);">Nenhum PR registrado ainda. Complete séries para acumular recordes.</p>`;
+    return;
+  }
+
+  prEl.innerHTML = keys.map(id => {
+    const pr = prs[id];
+    const d = new Date(pr.date).toLocaleDateString('pt-BR', { day:'2-digit', month:'2-digit', year:'2-digit' });
+    return `
+      <div class="pr-item">
+        <div class="pr-exercise">${pr.exerciseName}</div>
+        <div class="pr-details">
+          <span class="pr-badge">${pr.weight} kg × ${pr.reps} reps</span>
+          <span class="pr-vol">${Math.round(pr.volume)} kg vol.</span>
+          <span class="pr-date">${d}</span>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderExerciseBreakdown(history) {
+  const breakdownEl = document.getElementById("exerciseBreakdownList");
+  if (!breakdownEl) return;
+  const breakdown = getExerciseVolumeBreakdown(history);
+  const entries = Object.values(breakdown).sort((a, b) => b.totalVolume - a.totalVolume);
+
+  if (entries.length === 0) {
+    breakdownEl.innerHTML = `<p class="text-sm" style="color:var(--text-muted); padding:8px 0;">Nenhum dado de exercícios ainda.</p>`;
+    return;
+  }
+
+  const maxVol = entries[0].totalVolume || 1;
+
+  breakdownEl.innerHTML = entries.map(ex => {
+    const barPct = Math.max(5, Math.round((ex.totalVolume / maxVol) * 100));
+    return `
+      <div class="ex-breakdown-item">
+        <div class="ex-breakdown-header">
+          <span class="ex-breakdown-name">${ex.name}</span>
+          <span class="ex-breakdown-vol">${Math.round(ex.totalVolume).toLocaleString('pt-BR')} kg</span>
+        </div>
+        <div class="ex-breakdown-bar-bg">
+          <div class="ex-breakdown-bar" style="width: ${barPct}%;"></div>
+        </div>
+        <span class="ex-breakdown-sessions">${ex.sessions} sessão(ões)</span>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderHistoryList(history) {
   const listEl = document.getElementById("historyList");
   if (history.length === 0) {
     listEl.innerHTML = `<p class="text-sm" style="text-align:center; padding:16px;">Nenhum treino salvo ainda. Conclua uma sessão para visualizar os relatórios.</p>`;
     return;
   }
 
-  listEl.innerHTML = history.slice().reverse().map(h => `
-    <div class="history-item">
-      <div>
-        <div class="history-title">${h.workoutTitle}</div>
-        <div class="history-date">${new Date(h.date).toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: '2-digit', hour: '2-digit', minute:'2-digit' })}</div>
+  listEl.innerHTML = history.slice().reverse().map(h => {
+    const dateStr = new Date(h.date).toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: '2-digit', hour: '2-digit', minute:'2-digit' });
+    const hasExercises = h.exercises && h.exercises.length > 0;
+    const hasRunning = h.runningShots && h.runningShots.length > 0;
+
+    let detailsHtml = '';
+    if (hasExercises) {
+      detailsHtml = h.exercises.map(ex => {
+        const setRows = ex.sets.filter(s => s.done).map(s =>
+          `<div class="session-set-row"><span>#${s.setNumber}</span><span>${s.weight} kg × ${s.reps} reps</span><span class="session-set-vol">${Math.round(s.volume)} kg</span></div>`
+        ).join('');
+        return `
+          <div class="session-ex-block">
+            <div class="session-ex-name">${ex.name} <span class="session-ex-vol-total">${Math.round(ex.totalVolume)} kg total</span></div>
+            ${setRows}
+          </div>`;
+      }).join('');
+    } else if (hasRunning) {
+      const completedShots = h.runningShots.filter(s => s.done);
+      detailsHtml = completedShots.map(s =>
+        `<div class="session-set-row"><span>Tiro #${s.roundNumber}</span><span>${s.timeSec ? s.timeSec + 's' : '—'}</span></div>`
+      ).join('');
+    }
+
+    return `
+      <div class="history-item" data-session-id="${h.id}">
+        <div class="history-item-header">
+          <div>
+            <div class="history-title">${h.workoutTitle}</div>
+            <div class="history-date">${dateStr} • Sem. ${h.week || '?'}</div>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:flex-end; gap:4px;">
+            <div class="history-vol">${Math.round(h.totalVolume).toLocaleString('pt-BR')} kg</div>
+            ${detailsHtml ? `<button class="btn-expand-session" onclick="toggleSessionDetail('${h.id}')">▼ Detalhes</button>` : ''}
+          </div>
+        </div>
+        ${detailsHtml ? `<div class="session-detail hidden" id="detail_${h.id}">${detailsHtml}</div>` : ''}
       </div>
-      <div class="history-vol">${Math.round(h.totalVolume).toLocaleString('pt-BR')} kg</div>
-    </div>
-  `).join('');
+    `;
+  }).join('');
+}
+
+function toggleSessionDetail(sessionId) {
+  const el = document.getElementById(`detail_${sessionId}`);
+  const btn = el ? el.closest('.history-item').querySelector('.btn-expand-session') : null;
+  if (!el) return;
+  const isHidden = el.classList.contains('hidden');
+  el.classList.toggle('hidden', !isHidden);
+  if (btn) btn.textContent = isHidden ? '▲ Fechar' : '▼ Detalhes';
 }
 
 function renderVolumeChart(history) {
@@ -892,6 +1071,39 @@ function setupEventListeners() {
       return;
     }
 
+    // Monta detalhe completo de exercícios para persistência
+    let exercisesDetail = [];
+    let runningDetail = [];
+
+    if (wData.type === "gym") {
+      wData.exercises.forEach(ex => {
+        const sets = activeWorkoutState.exercises[ex.id] || [];
+        const doneSets = sets.filter(s => s.done);
+        const exTotalVol = doneSets.reduce((acc, s) => acc + (s.weight * s.reps), 0);
+        if (doneSets.length > 0) {
+          exercisesDetail.push({
+            id: ex.id,
+            name: ex.name,
+            totalVolume: Math.round(exTotalVol),
+            completedSets: doneSets.length,
+            sets: sets.map(s => ({
+              setNumber: s.setNumber,
+              weight: s.weight,
+              reps: s.reps,
+              volume: Math.round(s.weight * s.reps),
+              done: s.done
+            }))
+          });
+        }
+      });
+    } else if (wData.type === "running") {
+      runningDetail = activeWorkoutState.runningShots.map(s => ({
+        roundNumber: s.roundNumber,
+        timeSec: s.timeSec,
+        done: s.done
+      }));
+    }
+
     const sessionRecord = {
       id: Date.now(),
       date: new Date().toISOString(),
@@ -899,13 +1111,17 @@ function setupEventListeners() {
       workoutTitle: wData.title,
       totalVolume: Math.round(totalVol),
       totalSets: totalSetsDone,
-      week: appState.currentWeek
+      week: appState.currentWeek,
+      athleteWeight: appState.athleteWeight,
+      exercises: exercisesDetail,
+      runningShots: runningDetail
     };
 
     appState.history.push(sessionRecord);
+    updatePRs(sessionRecord); // Atualiza Personal Records
     saveState();
     playFinishBeep();
-    showToast(`Treino Salvo! Volume: ${Math.round(totalVol)} kg`);
+    showToast(`Treino Salvo! Volume: ${Math.round(totalVol)} kg • ${totalSetsDone} séries`);
 
     // Reset current workout checks
     initActiveDayState(wData);
@@ -985,20 +1201,79 @@ function setupEventListeners() {
 
   // Export JSON Backup
   document.getElementById("btnExportData").addEventListener("click", () => {
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appState, null, 2));
+    const exportData = {
+      exportedAt: new Date().toISOString(),
+      version: 2,
+      state: appState
+    };
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportData, null, 2));
     const dlAnchorElem = document.createElement('a');
     dlAnchorElem.setAttribute("href", dataStr);
-    dlAnchorElem.setAttribute("download", `combat_backup_${Date.now()}.json`);
+    dlAnchorElem.setAttribute("download", `combatfit_backup_${new Date().toISOString().slice(0,10)}.json`);
     dlAnchorElem.click();
+    showToast(`Backup exportado: ${appState.history.length} treinos`);
+  });
+
+  // Import JSON Backup
+  document.getElementById("btnImportData").addEventListener("click", () => {
+    document.getElementById("fileImportInput").click();
+  });
+
+  document.getElementById("fileImportInput").addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      try {
+        const parsed = JSON.parse(evt.target.result);
+        // Suporta formato v2 (com wrapper) e v1 (state direto)
+        const importedState = parsed.state || parsed;
+        if (!importedState.history || !Array.isArray(importedState.history)) {
+          throw new Error('Formato de backup inválido.');
+        }
+        const mergedHistory = [...appState.history];
+        let added = 0;
+        importedState.history.forEach(session => {
+          const exists = mergedHistory.some(h => h.id === session.id);
+          if (!exists) {
+            mergedHistory.push(session);
+            added++;
+          }
+        });
+        mergedHistory.sort((a, b) => new Date(a.date) - new Date(b.date));
+        appState.history = mergedHistory;
+        // Mescla PRs importados
+        if (importedState.prs) {
+          if (!appState.prs) appState.prs = {};
+          Object.keys(importedState.prs).forEach(exId => {
+            const imported = importedState.prs[exId];
+            const current = appState.prs[exId];
+            if (!current || imported.volume > current.volume) {
+              appState.prs[exId] = imported;
+            }
+          });
+        }
+        // Recalcula PRs de sessões que não tinham dados completos
+        appState.history.forEach(session => updatePRs(session));
+        saveState();
+        showToast(`Importado: +${added} treino(s) mesclados!`);
+        renderReports();
+      } catch (err) {
+        alert('Erro ao importar backup: ' + err.message);
+      }
+      e.target.value = '';
+    };
+    reader.readAsText(file);
   });
 
   // Clear data
   document.getElementById("btnClearData").addEventListener("click", () => {
-    if (confirm("Deseja realmente zerar todo o histórico de treinos?")) {
+    if (confirm("Deseja realmente zerar todo o histórico de treinos e PRs?")) {
       appState.history = [];
+      appState.prs = {};
       saveState();
       renderReports();
-      showToast("Histórico zerado.");
+      showToast("Histórico e PRs zerados.");
     }
   });
 }
