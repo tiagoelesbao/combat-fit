@@ -201,12 +201,12 @@ function getWorkoutsData(weight, week) {
         },
         {
           id: "landmine_punch",
-          name: "Landmine Punch (Soco na Barra Angular)",
-          transfer: "Transferência direta para o direto/cruzado de Muay Thai",
-          pctText: "10-15 kg",
-          defaultWeight: 10,
-          defaultReps: 6,
-          restSec: 60,
+          name: "Desenvolvimento Militar em Pé (Barra)",
+          transfer: "Força e estabilidade de ombro para sustentar guarda alta e travar o braço no soco/clinch",
+          pctText: "Barra + anilhas",
+          defaultWeight: 20, // comece com a barra vazia e ajuste
+          defaultReps: 7,
+          restSec: 90,
           sets: 3
         },
         {
@@ -282,11 +282,11 @@ function getWorkoutsData(weight, week) {
         },
         {
           id: "farmers_walk",
-          name: "Farmer's Walk (Caminhada do Fazendeiro)",
-          transfer: "Pegada de aço e estabilidade de trapézio e ombros",
-          pctText: "Halters 16-20kg",
+          name: "Farmer's Hold + Encolhimento (Halteres Pesados)",
+          transfer: "Pegada de aço e estabilidade de trapézio/ombros — mesmo estímulo do farmer's walk, parado no lugar",
+          pctText: "Halteres 16-20kg",
           defaultWeight: 36, // total somando as 2 mãos
-          defaultReps: 35, // passos
+          defaultReps: 40, // segundos de hold (feche cada série com 10-12 encolhimentos explosivos)
           restSec: 60,
           sets: 3
         }
@@ -342,12 +342,12 @@ function getWorkoutsData(weight, week) {
         },
         {
           id: "db_snatch",
-          name: "Dumbbell Snatch (Arranco com Halter)",
-          transfer: "Potência de corpo inteiro do chão para cima da cabeça",
-          pctText: "Halter 10-12kg",
-          defaultWeight: 12,
-          defaultReps: 5,
-          restSec: 60,
+          name: "Desenvolvimento Militar Sentado (Halteres)",
+          transfer: "Força e estabilidade de ombro para sustentar guarda e proteger o queixo em trocação",
+          pctText: "Halteres 10-14kg",
+          defaultWeight: 12, // por halter
+          defaultReps: 7,
+          restSec: 90,
           sets: 3
         },
         {

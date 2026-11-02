@@ -1,4 +1,4 @@
-const CACHE_NAME = 'combat-performance-v1';
+const CACHE_NAME = 'combat-performance-v3';
 const ASSETS = [
   './',
   './index.html',
