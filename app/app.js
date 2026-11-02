@@ -201,11 +201,11 @@ function getWorkoutsData(weight, week) {
         },
         {
           id: "landmine_punch",
-          name: "Desenvolvimento Militar em Pé (Barra)",
-          transfer: "Força e estabilidade de ombro para sustentar guarda alta e travar o braço no soco/clinch",
-          pctText: "Barra + anilhas",
-          defaultWeight: 20, // comece com a barra vazia e ajuste
-          defaultReps: 7,
+          name: "Push Press Explosivo (Barra)",
+          transfer: "Potência de empurrada vertical - extensão explosiva de quadril/joelho/ombro, mesmo RFD do arremesso de bola medicinal original",
+          pctText: "30-40% BW",
+          defaultWeight: speedLoad30,
+          defaultReps: 5,
           restSec: 90,
           sets: 3
         },
@@ -342,12 +342,12 @@ function getWorkoutsData(weight, week) {
         },
         {
           id: "db_snatch",
-          name: "Desenvolvimento Militar Sentado (Halteres)",
-          transfer: "Força e estabilidade de ombro para sustentar guarda e proteger o queixo em trocação",
-          pctText: "Halteres 10-14kg",
-          defaultWeight: 12, // por halter
-          defaultReps: 7,
-          restSec: 90,
+          name: "Dumbbell Push Press (Halteres)",
+          transfer: "Potência de corpo inteiro do chão pra cima da cabeça - extensão explosiva de pernas, quadril e ombros",
+          pctText: "Halteres 8-12kg",
+          defaultWeight: 10, // por halter
+          defaultReps: 6,
+          restSec: 60,
           sets: 3
         },
         {
