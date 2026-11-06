@@ -18,7 +18,9 @@ public final class PeriodizationEngine {
         let strengthPct = getWeekStrengthPercentage(week: week)
         let strengthLoad = (athleteWeight * (Double(strengthPct) / 100.0) * 2.0).rounded() / 2.0
         let speedLoad30 = (athleteWeight * 0.3 * 2.0).rounded() / 2.0
-        let mixedLoad50 = (athleteWeight * 0.5 * 2.0).rounded() / 2.0
+        // Terra Dinâmico (sexta): progride junto com a força máxima, mas 10 p.p. abaixo (submáximo/explosivo)
+        let dynamicPct = min(90, max(50, strengthPct - 10))
+        let mixedLoad50 = (athleteWeight * (Double(dynamicPct) / 100.0) * 2.0).rounded() / 2.0
         
         // 1. Segunda: Treino A
         let segExercises = [
@@ -184,7 +186,7 @@ public final class PeriodizationEngine {
                 id: "terra_rapido",
                 name: "Levantamento Terra Dinâmico",
                 transferDescription: "Extensão violenta de quadril na transição de potência",
-                loadPercentageText: "50-60% BW",
+                loadPercentageText: "\(dynamicPct)% BW",
                 targetWeight: mixedLoad50,
                 targetReps: 6,
                 restDurationSeconds: 120,

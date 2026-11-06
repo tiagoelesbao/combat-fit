@@ -157,8 +157,9 @@ function getWorkoutsData(weight, week) {
   const strengthPct = getWeekStrengthPercentage(week);
   const strengthLoad = Math.round((weight * (strengthPct / 100)) * 2) / 2; // Arredonda para 0.5kg
   const speedLoad30 = Math.round((weight * 0.3) * 2) / 2;
-  const mixedLoad50 = Math.round((weight * 0.5) * 2) / 2;
-  const mixedLoad70 = Math.round((weight * 0.7) * 2) / 2;
+  // Terra Dinâmico (sexta): progride junto com a força máxima, mas 10 p.p. abaixo (submáximo/explosivo)
+  const dynamicPct = Math.min(90, Math.max(50, strengthPct - 10));
+  const mixedLoad50 = Math.round((weight * (dynamicPct / 100)) * 2) / 2;
 
   return {
     seg: {
@@ -314,7 +315,7 @@ function getWorkoutsData(weight, week) {
           id: "terra_rapido",
           name: "Levantamento Terra Dinâmico",
           transfer: "Extensão rápida de quadril na transição de força",
-          pctText: "50-60% BW",
+          pctText: `${dynamicPct}% BW`,
           defaultWeight: mixedLoad50,
           defaultReps: 6,
           restSec: 120,
