@@ -156,10 +156,14 @@ function getWeekStrengthPercentage(weekNum) {
 function getWorkoutsData(weight, week) {
   const strengthPct = getWeekStrengthPercentage(week);
   const strengthLoad = Math.round((weight * (strengthPct / 100)) * 2) / 2; // Arredonda para 0.5kg
-  const speedLoad30 = Math.round((weight * 0.3) * 2) / 2;
   // Terra Dinâmico (sexta): progride junto com a força máxima, mas 10 p.p. abaixo (submáximo/explosivo)
   const dynamicPct = Math.min(90, Math.max(50, strengthPct - 10));
   const mixedLoad50 = Math.round((weight * (dynamicPct / 100)) * 2) / 2;
+  // Exercícios de potência/velocidade (Supino Velocidade, Push Press, Salto Vertical):
+  // progridem de 30% para 50% BW (+5%/semana), teto de 50% porque acima disso perde a
+  // cadência de 2 reps/s que é o objetivo do exercício.
+  const powerPct = Math.min(50, 30 + (week - 1) * 5);
+  const powerLoad = Math.round((weight * (powerPct / 100)) * 2) / 2;
 
   return {
     seg: {
@@ -193,8 +197,8 @@ function getWorkoutsData(weight, week) {
           id: "supino_vel",
           name: "Supino Reto (Velocidade)",
           transfer: "Via alática (CP) rápida - 2 reps/s por 8 segundos contínuos",
-          pctText: "30% BW",
-          defaultWeight: speedLoad30,
+          pctText: `${powerPct}% BW`,
+          defaultWeight: powerLoad,
           defaultReps: 16, // 16 reps em 8s (2 reps/s)
           restSec: 90,
           sets: 4,
@@ -204,8 +208,8 @@ function getWorkoutsData(weight, week) {
           id: "landmine_punch",
           name: "Push Press Explosivo (Barra)",
           transfer: "Potência de empurrada vertical - extensão explosiva de quadril/joelho/ombro, mesmo RFD do arremesso de bola medicinal original",
-          pctText: "30-40% BW",
-          defaultWeight: speedLoad30,
+          pctText: `${powerPct}% BW`,
+          defaultWeight: powerLoad,
           defaultReps: 5,
           restSec: 90,
           sets: 3
@@ -254,8 +258,8 @@ function getWorkoutsData(weight, week) {
           id: "salto_barra",
           name: "Salto Vertical com Carga Leve",
           transfer: "Tripla extensão explosiva (tornozelo, joelho e quadril)",
-          pctText: "30% BW",
-          defaultWeight: speedLoad30,
+          pctText: `${powerPct}% BW`,
+          defaultWeight: powerLoad,
           defaultReps: 6,
           restSec: 90,
           sets: 4,
@@ -324,8 +328,8 @@ function getWorkoutsData(weight, week) {
         {
           id: "supino_misto",
           name: "Supino Reto Potência Mista",
-          transfer: "Séries 1-2 Força (60%) / Séries 3-4 Velocidade máxima (30%)",
-          pctText: "60% & 30%",
+          transfer: `Séries 1-2 Força (${strengthPct}%, ${strengthLoad}kg) / Séries 3-4 Velocidade máxima (${powerPct}%, ${powerLoad}kg)`,
+          pctText: `${strengthPct}% & ${powerPct}%`,
           defaultWeight: strengthLoad,
           defaultReps: 7,
           restSec: 90,

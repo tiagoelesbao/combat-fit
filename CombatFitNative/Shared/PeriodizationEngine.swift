@@ -17,10 +17,14 @@ public final class PeriodizationEngine {
     public static func generateWeekWorkouts(athleteWeight: Double, week: Int) -> [String: WorkoutDay] {
         let strengthPct = getWeekStrengthPercentage(week: week)
         let strengthLoad = (athleteWeight * (Double(strengthPct) / 100.0) * 2.0).rounded() / 2.0
-        let speedLoad30 = (athleteWeight * 0.3 * 2.0).rounded() / 2.0
         // Terra Dinâmico (sexta): progride junto com a força máxima, mas 10 p.p. abaixo (submáximo/explosivo)
         let dynamicPct = min(90, max(50, strengthPct - 10))
         let mixedLoad50 = (athleteWeight * (Double(dynamicPct) / 100.0) * 2.0).rounded() / 2.0
+        // Exercícios de potência/velocidade (Supino Velocidade, Push Press, Salto Vertical):
+        // progridem de 30% para 50% BW (+5%/semana), teto de 50% porque acima disso perde a
+        // cadência de 2 reps/s que é o objetivo do exercício.
+        let powerPct = min(50, 30 + (week - 1) * 5)
+        let powerLoad = (athleteWeight * (Double(powerPct) / 100.0) * 2.0).rounded() / 2.0
         
         // 1. Segunda: Treino A
         let segExercises = [
@@ -48,8 +52,8 @@ public final class PeriodizationEngine {
                 id: "supino_vel",
                 name: "Supino Reto (Velocidade)",
                 transferDescription: "Via alática rápida (CP) - 2 reps/s por 8 segundos contínuos",
-                loadPercentageText: "30% BW",
-                targetWeight: speedLoad30,
+                loadPercentageText: "\(powerPct)% BW",
+                targetWeight: powerLoad,
                 targetReps: 16,
                 restDurationSeconds: 90,
                 isSpeedCadence: true,
@@ -57,10 +61,10 @@ public final class PeriodizationEngine {
             ),
             Exercise(
                 id: "landmine_punch",
-                name: "Landmine Punch (Soco na Barra Angular)",
-                transferDescription: "Transferência angular para direto/cruzado de Muay Thai",
-                loadPercentageText: "10-15 kg",
-                targetWeight: 10.0,
+                name: "Push Press Explosivo (Barra)",
+                transferDescription: "Potência de empurrada vertical - extensão explosiva de quadril/joelho/ombro, mesmo RFD do arremesso de bola medicinal original",
+                loadPercentageText: "\(powerPct)% BW",
+                targetWeight: powerLoad,
                 targetReps: 6,
                 restDurationSeconds: 60,
                 setsCount: 3
@@ -117,8 +121,8 @@ public final class PeriodizationEngine {
                 id: "salto_barra",
                 name: "Salto Vertical com Carga Leve",
                 transferDescription: "Tripla extensão explosiva de tornozelo, joelho e quadril",
-                loadPercentageText: "30% BW",
-                targetWeight: speedLoad30,
+                loadPercentageText: "\(powerPct)% BW",
+                targetWeight: powerLoad,
                 targetReps: 6,
                 restDurationSeconds: 90,
                 isSpeedCadence: true,
@@ -195,8 +199,8 @@ public final class PeriodizationEngine {
             Exercise(
                 id: "supino_misto",
                 name: "Supino Reto Potência Mista",
-                transferDescription: "Séries 1-2 Força (60%) / Séries 3-4 Velocidade pura (30%)",
-                loadPercentageText: "60% & 30%",
+                transferDescription: "Séries 1-2 Força (\(strengthPct)%, \(strengthLoad)kg) / Séries 3-4 Velocidade pura (\(powerPct)%, \(powerLoad)kg)",
+                loadPercentageText: "\(strengthPct)% & \(powerPct)%",
                 targetWeight: strengthLoad,
                 targetReps: 7,
                 restDurationSeconds: 90,
