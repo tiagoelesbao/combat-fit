@@ -142,7 +142,7 @@ public final class PeriodizationEngine {
                 id: "barra_fixa",
                 name: "Barra Fixa ou Puxada Frontal",
                 transferDescription: "Controle de costas e pegadas firmes no combate",
-                loadPercentageText: "BW / 60%",
+                loadPercentageText: "BW / \(strengthPct)%",
                 targetWeight: strengthLoad,
                 targetReps: 6,
                 restDurationSeconds: 90,

@@ -279,7 +279,7 @@ function getWorkoutsData(weight, week) {
           id: "barra_fixa",
           name: "Barra Fixa ou Puxada Frontal",
           transfer: "Dorsais fortes para esgrima e controle de guarda",
-          pctText: "BW ou 60%",
+          pctText: `BW ou ${strengthPct}%`,
           defaultWeight: strengthLoad,
           defaultReps: 6,
           restSec: 90,
